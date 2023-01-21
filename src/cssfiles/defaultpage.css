@@ -1,0 +1,45 @@
+.active-tabs1  {
+    background: linear-gradient(to bottom, rgb(117, 246, 246), #1389f1);
+    border-bottom: 1px solid transparent;
+    /* color: rgb(240, 225, 225); */
+    width:100%;
+    margin:auto;
+  }
+.qwer{
+  width:30%;
+  margin:auto;
+  margin-top: 2rem;
+}
+
+.er{
+  margin: auto;
+  width:25%;
+}
+
+
+@media screen and (max-width: 950px) {
+  .qwer{
+      text-align: center;
+      width: 100%;
+      display:block;
+      
+  }
+  .er{
+    width:50%;
+    margin: auto;
+    display:block;
+  }
+  
+}
+
+@media screen and (max-width: 620px) {
+  .qwer{
+      text-align: center;
+      width: 100%;
+      
+  }
+  .er{
+    width:100%;
+    display: none;
+  }
+}

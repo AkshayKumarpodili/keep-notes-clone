@@ -1,0 +1,19 @@
+.notes {
+    background-color: whitesmoke;
+}
+
+.delete{
+    margin-right: 100px;
+}
+
+.edit {
+  margin-left: 45px;
+}
+
+.button-start{
+    display: flex;
+    justify-content: flex-start;
+}
+
+
+

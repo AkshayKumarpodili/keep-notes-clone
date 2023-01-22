@@ -12,11 +12,13 @@ import { Tooltip, IconButton } from '@mui/material';
 import {BsPin} from "react-icons/bs";
 import { collection, query, getDocs, doc, getDoc, deleteDoc, addDoc } from "firebase/firestore";
 import NavbarData from './NavbarData';
+import Loader from './Loader';
 
 function GetNote({ getNoteId }) {
 
   const [message, setMessage] = useState({ error: false, msg: "" });
   const [searchTerm,setSearchTerm] = useState("");
+  const [isloading,setIsLoading] = useState(false);
   const navigate=useNavigate();
 
 
@@ -27,6 +29,7 @@ function GetNote({ getNoteId }) {
   
     const getUsers = async () => {
 
+      setIsLoading(true);
       const loginUsername = localStorage.getItem("loginUsername");
       const snapshot = await UserDataService.getAllUsers();
       const data = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
@@ -40,6 +43,7 @@ function GetNote({ getNoteId }) {
           const userInfo = userDetails.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
           setAllNotes(userDetails.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
           console.log(userInfo);  
+          setIsLoading(false);
       })
 
     };
@@ -91,85 +95,89 @@ function GetNote({ getNoteId }) {
 
   return (
     <div>
+
       <NavbarData/>
+
     <div className='notes'>
     <div className='container'>
 
-
     <h2 className='text-center p-2 mt-4 text-white bg-success rounded font'>All Your Notes</h2>
-              
-
               <div className='d-flex justify-content-between mt-3'>
-                
                 <div class="input-group">
                   <div class="form-outline">
-                    <input id="search-focus" type="search" placeholder="Search here..." class="form-control" onChange={(event) => {setSearchTerm(event.target.value);}} />
-                    
-                  </div>
-                  
+                    <input id="search-focus" type="search" placeholder="Search here..." class="form-control" onChange={(event) => {setSearchTerm(event.target.value);}} />                    
+                  </div>   
                 </div>
-                
-               
-  
               </div>
        
      
       <Button variant="dark edit m-4" onClick={getUsers}>Refresh Page</Button> 
-      {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
+      {isloading ? ( 
+            <div><Loader/></div> 
+        ) : (
 
-      <div className='cards row' >
-              {
-                  allnotes.filter((val) => {
-                    if(searchTerm === ""){
-                      return val;
-                    }else if(val.title.toLowerCase().includes(searchTerm.toLowerCase())){
-                      return val;
-                    }
-                  }).map((val) =>(
-                    <div class="col-sm-6 col-md-4 mt-2 ">
-                      <div key={val.id} className='card shadow h-100 zoom21'>
-                      <div className="card-body w-75">
-                        <h3 className='ofont1 text-center'>{val.title}</h3>
-                        <div className="ofont1 d-flex m-4 w-75">
-                            <div> {val.note}</div>
-                        </div>
+          <>
+          
+          {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
 
-                        <div className='button-start'>
-                           
-                          <Tooltip title='delete'>
-                            <IconButton>
-                            <AiFillDelete className='fs-2' onClick={() => deleteTrashHandler(val.id)} />
-                            </IconButton>
-                        </Tooltip>
+        
+        <div className='cards row' >
+          {
+            allnotes.filter((val) => {
+              if(searchTerm === ""){
+                return val;
+              }else if(val.title.toLowerCase().includes(searchTerm.toLowerCase())){
+                return val;
+              }
+            }).map((val) =>(
+              <div class="col-sm-6 col-md-4 mt-2 ">
+                <div key={val.id} className='card shadow h-100 zoom21'>
+                <div className="card-body w-75">
+                  <h3 className='ofont1 text-center'>{val.title}</h3>
+                  <div className="ofont1 d-flex m-4 w-75">
+                      <div> {val.note}</div>
+                  </div>
 
-
-                        <Tooltip title='Edit'>
-                            <IconButton>
-                            <BiEdit className='fs-2' onClick={() => editHandler(val.id)} />
-                            </IconButton>
-                        </Tooltip>
-
-
-                        <Tooltip title='Archive'>
-                            <IconButton>
-                            <BiArchiveIn className='fs-2' onClick={() => archiveHandler(val.id)}/> 
-                            </IconButton>
-                        </Tooltip>
+                  <div className='button-start'>
+                     
+                    <Tooltip title='delete'>
+                      <IconButton>
+                      <AiFillDelete className='fs-2' onClick={() => deleteTrashHandler(val.id)} />
+                      </IconButton>
+                  </Tooltip>
 
 
-                        <Tooltip title='Pin Note'>
-                            <IconButton>
-                            <BsPin className='fs-2' onClick={() => pinHandler(val.id)}/> 
-                            </IconButton>
-                        </Tooltip>
+                  <Tooltip title='Edit'>
+                      <IconButton>
+                      <BiEdit className='fs-2' onClick={() => editHandler(val.id)} />
+                      </IconButton>
+                  </Tooltip>
 
-                      </div>
-                      </div>
-                      </div>
-                    </div>
-                  ))
-              } 
+
+                  <Tooltip title='Archive'>
+                      <IconButton>
+                      <BiArchiveIn className='fs-2' onClick={() => archiveHandler(val.id)}/> 
+                      </IconButton>
+                  </Tooltip>
+
+
+                  <Tooltip title='Pin Note'>
+                      <IconButton>
+                      <BsPin className='fs-2' onClick={() => pinHandler(val.id)}/> 
+                      </IconButton>
+                  </Tooltip>
+
+                </div>
+                </div>
+                </div>
               </div>
+            ))
+        } 
+        </div>
+
+          </>
+
+      )}
 
     </div>
     </div>    

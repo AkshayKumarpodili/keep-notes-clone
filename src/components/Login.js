@@ -49,18 +49,7 @@ const Login = () => {
 };
 
 
-const handleGoogleSignIn = async(e) => {
-    e.preventDefault();
-    try {
-      await googleSignIn();
-       navigate("/addnote");       
-  } catch (err) {
-  setError(err.message);
-  }
 
-};
-
- 
 
   return (
     <div>
@@ -96,9 +85,7 @@ const handleGoogleSignIn = async(e) => {
           </div>
         </Form>
         
-        <hr />
-        <div> <GoogleButton className=" qwe rounded  m-auto" type="dark" onClick={handleGoogleSignIn}/> </div>
-        <hr/>
+       
 
         <div className='ps-3 mt-4' style={{ color: 'grey'}}> Don't have an account? <Link to="/signup"   style={{ color: 'black', fontWeight: 'bold', textDecoration: 'none'}}>Register</Link></div>
         

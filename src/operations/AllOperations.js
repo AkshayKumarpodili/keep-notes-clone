@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 const UserCollectionRef = collection(db, "user");
 class UserDataService {

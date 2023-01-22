@@ -7,12 +7,14 @@ import { BiArchiveOut } from "react-icons/bi";
 import { IconButton,Tooltip } from '@mui/material';
 import { collection, query, getDocs, doc, getDoc, deleteDoc, addDoc } from "firebase/firestore";
 import NavbarData from './NavbarData';
+import Loader from './Loader';
  
 function ArchiveData() {
 
   
   const [allnotes, setAllNotes] = useState([]);
   const [searchTerm,setSearchTerm] = useState("");
+  const [isloading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ error: false, msg: "" });
 
   useEffect(() => {
@@ -21,13 +23,14 @@ function ArchiveData() {
 
   const getUsers = async () => {
 
+        setIsLoading(true);
         const loginUsername = localStorage.getItem("loginUsername");
         const q = query(collection(db, `user/${loginUsername}/archive`));
         const userDetails = await getDocs(q);
         //console.log(userDetails.docs);
-        const userInfo = userDetails.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         setAllNotes(userDetails.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-        //console.log(userInfo);  
+        //console.log(userInfo);
+        setIsLoading(false);  
     
   
   };
@@ -84,49 +87,59 @@ function ArchiveData() {
    
       <Button variant="dark edit m-4" onClick={getUsers}>Refresh Page</Button> 
       
-      {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
+      {isloading ? (
+            <div><Loader/></div> 
 
+      ) :  (
 
-      <div className='cards row' >
-              {
-                  allnotes.filter((val) => {
-                    if(searchTerm === ""){
-                      return val;
-                    }else if(val.title.toLowerCase().includes(searchTerm.toLowerCase())){
-                      return val;
-                    }
-                  }).map((val) =>(
-                    <div class="col-sm-6 col-md-4 mt-2 ">
-                      <div key={val.id} className='card shadow h-100 zoom21'>
-                      <div className="card-body w-75">
-                        <h3 className='ofont1 text-center'>{val.title}</h3>
-                        <div className="ofont1 d-flex m-4 w-75">
-                            <div> {val.note}</div>
-                        </div>
+          <>
 
-                        <div className='button-start'>
-                         
+              {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
 
-                          <Tooltip title='delete'>
-                            <IconButton>
-                                <AiFillDelete className='fs-2' onClick={() => deleteTrashHandler(val.id)}/>
-                            </IconButton>
-                        </Tooltip>
-                        
-                          <Tooltip title='UnArchive'>
-                            <IconButton>
-                                <BiArchiveOut className='fs-2' onClick={() => unarchiveHandler(val.id)}/>
-                            </IconButton>
-                        </Tooltip>
-                                            
-                        </div>
-                        
-                      </div>
-                      </div>
-                    </div>
-                  ))
-              } 
-              </div>
+                        <div className='cards row' >
+                                {
+                                    allnotes.filter((val) => {
+                                      if(searchTerm === ""){
+                                        return val;
+                                      }else if(val.title.toLowerCase().includes(searchTerm.toLowerCase())){
+                                        return val;
+                                      }
+                                    }).map((val) =>(
+                                      <div class="col-sm-6 col-md-4 mt-2 ">
+                                        <div key={val.id} className='card shadow h-100 zoom21'>
+                                        <div className="card-body w-75">
+                                          <h3 className='ofont1 text-center'>{val.title}</h3>
+                                          <div className="ofont1 d-flex m-4 w-75">
+                                              <div> {val.note}</div>
+                                          </div>
+
+                                          <div className='button-start'>
+                                          
+
+                                            <Tooltip title='delete'>
+                                              <IconButton>
+                                                  <AiFillDelete className='fs-2' onClick={() => deleteTrashHandler(val.id)}/>
+                                              </IconButton>
+                                          </Tooltip>
+                                          
+                                            <Tooltip title='UnArchive'>
+                                              <IconButton>
+                                                  <BiArchiveOut className='fs-2' onClick={() => unarchiveHandler(val.id)}/>
+                                              </IconButton>
+                                          </Tooltip>
+                                                              
+                                          </div>
+                                          
+                                        </div>
+                                        </div>
+                                      </div>
+                                    ))
+                                } 
+                                </div>
+
+          </>
+         )}
+      
 
     </div>
     </div>

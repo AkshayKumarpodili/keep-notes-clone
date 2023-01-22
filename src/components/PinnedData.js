@@ -7,12 +7,14 @@ import { Button } from 'react-bootstrap';
 import { Alert } from 'react-bootstrap';
 import {AiFillDelete} from "react-icons/ai";
 import NavbarData from './NavbarData';
+import Loader from './Loader';
 
 function Pin() {
  
     const [message, setMessage] = useState({ error: false, msg: "" });
     const [searchTerm,setSearchTerm] = useState("");
     const [pinnotes, setPinNotes] = useState([]);
+    const [isloading, setIsLoading] = useState(false);
 
 
     useEffect(() => {
@@ -21,14 +23,15 @@ function Pin() {
   
     const getUsers = async () => {
 
-      const loginUsername = localStorage.getItem("loginUsername");
+          setIsLoading(true);
+          const loginUsername = localStorage.getItem("loginUsername");
           const q = query(collection(db, `user/${loginUsername}/pin`));
           const userDetails = await getDocs(q);
           //console.log(userDetails.docs);
           //const userInfo = userDetails.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
           setPinNotes(userDetails.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
           //console.log(userInfo);  
-      
+          setIsLoading(false);
     
     };
 
@@ -88,47 +91,61 @@ function Pin() {
        
      
       <Button variant="dark edit m-4" onClick={getUsers}>Refresh Page</Button> 
-      {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
 
-      <div className='cards row' >
-              {
-                  pinnotes.filter((val) => {
-                    if(searchTerm === ""){
-                      return val;
-                    }else if(val.title.toLowerCase().includes(searchTerm.toLowerCase())){
-                      return val;
-                    }
-                  }).map((val) =>(
-                    <div class="col-sm-6 col-md-4 mt-2 ">
-                      <div key={val.id} className='card shadow h-100 zoom21'>
-                      <div className="card-body w-75">
-                        <h3 className='ofont1 text-center'>{val.title}</h3>
-                        <div className="ofont1 d-flex m-4 w-75">
-                            <div> {val.note}</div>
-                        </div>
+      {isloading ? (
+            <div><Loader/></div> 
 
-                        <div className='button-start'>
-                           
-                          <Tooltip title='delete'>
-                            <IconButton>
-                            <AiFillDelete className='fs-2' onClick={() => deleteTrashHandler(val.id)} />
-                            </IconButton>
-                        </Tooltip>
+      ) :  (
+
+          <>
+          
+          {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
 
 
-                        <Tooltip title='UnPin Note'>
-                            <IconButton>
-                            <BsPinFill className='fs-2' onClick={() => UnpinHandler(val.id)}/> 
-                            </IconButton>
-                        </Tooltip>
+                            <div className='cards row' >
+                                    {
+                                        pinnotes.filter((val) => {
+                                          if(searchTerm === ""){
+                                            return val;
+                                          }else if(val.title.toLowerCase().includes(searchTerm.toLowerCase())){
+                                            return val;
+                                          }
+                                        }).map((val) =>(
+                                          <div class="col-sm-6 col-md-4 mt-2 ">
+                                            <div key={val.id} className='card shadow h-100 zoom21'>
+                                            <div className="card-body w-75">
+                                              <h3 className='ofont1 text-center'>{val.title}</h3>
+                                              <div className="ofont1 d-flex m-4 w-75">
+                                                  <div> {val.note}</div>
+                                              </div>
 
-                      </div>
-                      </div>
-                      </div>
-                    </div>
-                  ))
-              } 
-              </div>
+                                              <div className='button-start'>
+                                                
+                                                <Tooltip title='delete'>
+                                                  <IconButton>
+                                                  <AiFillDelete className='fs-2' onClick={() => deleteTrashHandler(val.id)} />
+                                                  </IconButton>
+                                              </Tooltip>
+
+
+                                              <Tooltip title='UnPin Note'>
+                                                  <IconButton>
+                                                  <BsPinFill className='fs-2' onClick={() => UnpinHandler(val.id)}/> 
+                                                  </IconButton>
+                                              </Tooltip>
+
+                                            </div>
+                                            </div>
+                                            </div>
+                                          </div>
+                                        ))
+                                    } 
+                                    </div>
+                         
+          </>
+      )}   
+
+      
 
         </div>
     </div>

@@ -1,9 +1,11 @@
 .notes {
     background-color: whitesmoke;
+    height: max-content;
 }
 
 .delete{
     margin-right: 100px;
+    background-color: black;
 }
 
 .edit {

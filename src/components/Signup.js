@@ -35,7 +35,6 @@ const Signup = () => {
           })  
           
           
-         
           const Obj={username,email,password,confirmpassword};
           await setDoc(doc(db, "user", username), Obj);
           localStorage.setItem("signupId",username);

@@ -120,8 +120,11 @@ function GetNote({ getNoteId }) {
           
           {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
 
-        
-        <div className='cards row' >
+          {allnotes.length !== 0 ? (
+
+            <>
+            
+            <div className='cards row' >
           {
             allnotes.filter((val) => {
               if(searchTerm === ""){
@@ -175,6 +178,12 @@ function GetNote({ getNoteId }) {
         } 
         </div>
 
+            </>
+
+          ) : ( 
+            <h3 className='text-center p-3 mt-5'>No notes created yet!!</h3>
+          )}
+
           </>
 
       )}
@@ -185,4 +194,4 @@ function GetNote({ getNoteId }) {
   )
 }
 
-export default GetNote
+export default GetNote;

@@ -96,7 +96,11 @@ function ArchiveData() {
 
               {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
 
-                        <div className='cards row' >
+              {allnotes.length !== 0 ? (
+
+                <>
+                   
+                   <div className='cards row' >
                                 {
                                     allnotes.filter((val) => {
                                       if(searchTerm === ""){
@@ -136,6 +140,14 @@ function ArchiveData() {
                                     ))
                                 } 
                                 </div>
+
+                </>
+
+
+              ) : (
+                <h3 className="text-center p-3 mt-5">No notes archived yet!!</h3>
+
+              )}
 
           </>
          )}

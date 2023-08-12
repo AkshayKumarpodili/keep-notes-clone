@@ -85,8 +85,6 @@ function Pin() {
                   
                 </div>
                 
-               
-  
               </div>
        
      
@@ -101,7 +99,9 @@ function Pin() {
           
           {message?.msg && (<Alert variant={message?.error ? "danger" : "success"}  dismissible onClose={() => setMessage("")}>{message?.msg} </Alert> )}
 
+                  {pinnotes.length !== 0 ? (
 
+                      <>
                             <div className='cards row' >
                                     {
                                         pinnotes.filter((val) => {
@@ -141,6 +141,11 @@ function Pin() {
                                         ))
                                     } 
                                     </div>
+                      </>
+
+                  ) : (
+                    <h3 className="text-center p-3 mt-5">No notes pinned yet!!</h3>
+                  )}
                          
           </>
       )}   

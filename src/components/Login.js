@@ -17,7 +17,7 @@ const Login = () => {
   const [username,setUsername] = useState("");
   const navigate = useNavigate();
   const {LogIn} = useUserAuth();
-  const {googleSignIn} = useUserAuth();
+  //const {googleSignIn} = useUserAuth();
 
 
   const handleSubmit = async(e) => {
@@ -36,7 +36,7 @@ const Login = () => {
         localStorage.setItem("loginUsername",username);
         navigate("/addnote");    
       }
-
+      
       else
       {
         setError("Not checked")    
